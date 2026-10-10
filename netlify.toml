@@ -1,0 +1,22 @@
+# Netlify settings. Only the site/ folder is published; mockup/ drafts stay private.
+[build]
+  publish = "site"
+  command = ""
+
+# /pro works as well as /pro.html
+[[redirects]]
+  from = "/pro"
+  to = "/pro.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
