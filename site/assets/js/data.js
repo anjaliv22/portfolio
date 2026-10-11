@@ -27,9 +27,13 @@ window.PORTFOLIO = {
     },
   },
 
-  experience: [
+  experience: [ // oldest first; Pro mode shows newest first
     {
       id: 'graze',
+      bullets: [ // straight from the resume; shown in Pro mode
+        "Built and scaled production-grade web scraping automation systems in Python, engineering robust data pipelines that extracted millions of data points and reduced data sourcing costs by over $10k annually.",
+        "Architected and iteratively benchmarked multiple scraping pipelines using Django, Selenium and Scrapy, selecting optimal approaches to reduce runtime by 60% and improve reliability through automated data enrichment.",
+      ],
       org: 'Graze AI',
       role: 'Software Engineering Intern',
       dates: 'May – August 2024',
@@ -51,6 +55,10 @@ window.PORTFOLIO = {
     },
     {
       id: 'honest',
+      bullets: [ // straight from the resume; shown in Pro mode
+        "Designed and implemented scalable backend services using Node.js, building dynamic data synchronization pipelines between cloud services and implementing schema-flexible GraphQL queries to support various client data models.",
+        "Developed internal tooling dashboards using HTML/CSS and server-rendered templates, automating client configuration workflows and reducing manual operational overhead.",
+      ],
       org: 'The Honest Consultants',
       role: 'Software Developer Intern',
       dates: 'January – April 2025',
@@ -69,6 +77,11 @@ window.PORTFOLIO = {
     },
     {
       id: 'martinrea1',
+      bullets: [ // straight from the resume; shown in Pro mode
+        "Re-architected and standardized a production-grade Python codebase for industrial ML-based computer vision systems into a multiprocessing architecture, adopted as the core codebase for CV deployments across manufacturing plants globally.",
+        "Adapted the vision system for a conveyor belt production line, developing a ghost-box tracking algorithm to maintain part identity under variable camera frame rates, preventing duplicate or dropped detections that could stall production.",
+        "Developed and trained a three-stage model pipeline (detection, classification and segmentation) using machine learning architectures to perform sequential quality checks on each part, reducing defect detection false negatives to 0.77%.",
+      ],
       org: 'Martinrea International',
       role: 'Computer Vision Application Intern',
       dates: 'September – December 2025',
@@ -91,6 +104,10 @@ window.PORTFOLIO = {
     },
     {
       id: 'martinrea2',
+      bullets: [ // straight from the resume; shown in Pro mode
+        "Engineered a React/HTML-based front end and C++ backend to bring the standardized Python-based vision system into a live inspection application, integrating a Django-based data-offloading pipeline to sync edge-device results to a centralized server.",
+        "Designed a human-in-the-loop vision system accommodating real-time inspection for 13 assemblies to reduce manual inspection time, selecting cameras and hardware while evaluating and integrating YOLO, TensorRT and ONNX models.",
+      ],
       org: 'Martinrea International',
       role: 'Computer Vision Engineering Intern',
       dates: 'May – August 2026',
@@ -112,6 +129,9 @@ window.PORTFOLIO = {
     },
     {
       id: 'electrium',
+      bullets: [ // straight from the resume; shown in Pro mode
+        "Leading the development of a BLDC electronic speed controller (ESC), working on embedded motor control firmware involving state-machine-based control, PWM generation, sensor feedback and closed-loop control validation.",
+      ],
       org: 'Electrium Mobility',
       role: 'Firmware Team Lead',
       dates: 'December 2025 – September 2026',

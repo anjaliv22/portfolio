@@ -3,10 +3,22 @@
   publish = "site"
   command = ""
 
-# /pro works as well as /pro.html
+# The professional page is the homepage. Old /pro links go there; /garden opens Fun mode.
 [[redirects]]
   from = "/pro"
-  to = "/pro.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pro.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/garden"
+  to = "/garden.html"
   status = 200
 
 [[headers]]

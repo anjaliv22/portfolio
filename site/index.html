@@ -3,80 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Anjali Vathanakumaran · The Garden</title>
-  <meta name="description" content="Anjali Vathanakumaran, Computer Engineering at the University of Waterloo. A watercolour garden where a computer vision model finds my work experience and projects.">
+  <title>Anjali Vathanakumaran · Computer Engineering</title>
+  <meta name="description" content="Anjali Vathanakumaran, Computer Engineering (Mechatronics) at the University of Waterloo. Firmware, computer vision and full-stack software.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://anjaliv.ca/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://anjaliv.ca/">
-  <meta property="og:title" content="Anjali Vathanakumaran · The Garden">
+  <meta property="og:title" content="Anjali Vathanakumaran · Computer Engineering">
   <meta property="og:description" content="Computer Engineering at the University of Waterloo. Firmware, computer vision and full-stack software.">
-  <meta name="theme-color" content="#9BC07C">
+  <meta name="theme-color" content="#F7E1E5">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600;700&display=swap">
-  <link rel="stylesheet" href="assets/css/garden.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..650,50;1,9..144,400,50&family=Figtree:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/pro.css">
 </head>
 <body>
-  <main class="stage" id="stage">
-    <svg id="scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" role="img"
-         aria-label="A watercolour garden path leading to a small stone library. Bunnies hop between peonies and hydrangeas while a gardener waters the flowers."></svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="berry" viewBox="0 0 32 36">
+      <path d="M16 34 C 8 30 3 22 4 15 C 5 10 10 9 16 11 C 22 9 27 10 28 15 C 29 22 24 30 16 34 Z" fill="#E7848F"/>
+      <path d="M9 15 C 10 13 12 12.5 14 13" fill="none" stroke="#F2B0B8" stroke-width="1.6" stroke-linecap="round"/>
+      <g fill="#F8E2B6"><ellipse cx="11" cy="18" rx="1" ry="1.4"/><ellipse cx="16" cy="16.5" rx="1" ry="1.4"/><ellipse cx="21" cy="18" rx="1" ry="1.4"/><ellipse cx="13.5" cy="23" rx="1" ry="1.4"/><ellipse cx="18.5" cy="23" rx="1" ry="1.4"/><ellipse cx="16" cy="28" rx="1" ry="1.4"/><ellipse cx="9" cy="23" rx=".9" ry="1.3"/><ellipse cx="23" cy="23" rx=".9" ry="1.3"/></g>
+      <g fill="#8DB287"><path d="M16 12 L 9 9 L 13 7 Z"/><path d="M16 12 L 23 9 L 19 7 Z"/><path d="M16 12 L 12 4 L 16 6 Z"/><path d="M16 12 L 20 4 L 16 6 Z"/></g>
+      <path d="M16 6 Q 16.5 2.5 18.5 1" fill="none" stroke="#6F9A69" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+  </svg>
 
-    <div class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <a class="skip" href="#main">Skip to content</a>
 
-    <header class="hud">
-      <h1 class="name" id="name"></h1>
-      <p class="tagline" id="tagline"></p>
-      <p class="live" id="live"><span class="dot"></span><span id="liveText">MODEL IDLE · CAM 01</span></p>
-      <p class="hint" id="hint">Click a <b class="c-bunny">bunny</b> for my work, a <b class="c-peony">peony</b> for a project, <b class="c-person">me</b> to say hi, or the <b class="c-building">library</b> for everything.</p>
-      <p class="pan-hint">Drag to look around. Tap anything to inspect it.</p>
-    </header>
-
-    <a class="mode" href="pro.html" aria-label="Switch to Pro mode">
-      <span class="on">Fun</span><span class="switch" aria-hidden="true"><span></span></span><span>Pro</span>
-    </a>
-
-    <div class="controls">
-      <button class="run" id="runBtn" type="button">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path id="runIcon" d="M6 4 L16 10 L6 16 Z"></path></svg>
-        <span id="runLabel">Run model inference</span>
-      </button>
-      <ol class="stages" id="stages" aria-label="Model pipeline">
-        <li data-stage="detect">detect</li>
-        <li data-stage="classify">classify</li>
-        <li data-stage="segment">segment</li>
-      </ol>
-    </div>
-
-    <button class="panel-toggle" id="panelToggle" type="button" aria-controls="panel" aria-expanded="false">Model results</button>
-    <aside class="panel" id="panel" aria-label="Model results">
-      <div class="panel-head">
-        <h2>Model results</h2>
-        <span class="count" id="objCount">idle</span>
+  <div class="shell">
+    <nav class="tabs" aria-label="Sections">
+      <a class="brand" href="#about"><svg class="berry" aria-hidden="true"><use href="#berry"/></svg><span id="brandName"></span></a>
+      <ul class="tab-list" id="tabList">
+        <li><a class="tab" href="#about" data-sec="about">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>About me</a></li>
+        <li><a class="tab" href="#skills" data-sec="skills">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>Skills &amp; education</a></li>
+        <li><a class="tab" href="#experience" data-sec="experience">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Experience</a>
+          <ul class="sub-list" id="expSubList"></ul></li>
+        <li><a class="tab" href="#projects" data-sec="projects">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projects</a></li>
+      </ul>
+      <div class="nav-foot">
+        <a class="mode" href="garden.html" aria-label="Switch to Fun mode, a garden">
+          <span class="on">Pro</span><span class="switch" aria-hidden="true"><span></span></span><span>Fun</span>
+        </a>
+        <div class="nav-links" id="navLinks"></div>
       </div>
-      <div class="panel-body" id="panelBody"></div>
-      <details class="settings" id="settings">
-        <summary><span>Model settings</span><span class="summary-vals" id="settingsSummary"></span></summary>
-        <label for="conf">Confidence threshold <output id="confOut">0.50</output></label>
-        <input type="range" id="conf" min="0.1" max="0.95" step="0.05" value="0.5">
-        <label class="check" for="masks"><input type="checkbox" id="masks" checked> Show segmentation masks</label>
-        <label for="ph">Soil pH <output id="phOut">5.5</output></label>
-        <input type="range" id="ph" min="4.5" max="8" step="0.1" value="5.5">
-        <p class="small">Hydrangeas really do change colour with soil pH: acidic soil turns them blue, alkaline soil turns them pink.</p>
-        <p class="small">The detections here are scripted for fun. The work behind them is real.</p>
-      </details>
-    </aside>
+    </nav>
 
-    <div class="hovercard" id="hovercard" hidden></div>
-  </main>
-
-  <div class="overlay" id="overlay" hidden>
-    <div class="window" id="window" role="dialog" aria-modal="true" aria-labelledby="winTitle"></div>
+    <main id="main" tabindex="-1">
+      <section class="sec hero" id="about" aria-labelledby="aboutTitle"></section>
+      <section class="sec" id="skills" aria-labelledby="skillsTitle"></section>
+      <section class="sec" id="experience" aria-labelledby="expTitle"></section>
+      <section class="sec" id="projects" aria-labelledby="projTitle"></section>
+      <footer class="foot" id="foot"></footer>
+    </main>
   </div>
 
-  <noscript><p class="noscript">This garden needs JavaScript. <a href="pro.html">See the Pro version instead.</a></p></noscript>
-
   <script src="assets/js/data.js"></script>
-  <script src="assets/js/garden.js"></script>
+  <script src="assets/js/pro.js"></script>
 </body>
 </html>

@@ -547,7 +547,7 @@
     panelBody.innerHTML = `<div class="idle">
       <p>The model is idle. Press <b>Run model inference</b> to see what is growing in this garden.</p>
       <button class="run" type="button" data-run><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z"></path></svg><span>Run model inference</span></button>
-      <p class="small">Or just click anything in the garden. Prefer a plain page? <a href="pro.html">Switch to Pro mode</a>.</p>
+      <p class="small">Or just click anything in the garden. Prefer a plain page? <a href="index.html">Switch to Pro mode</a>.</p>
     </div>`;
     updateSummary();
   }
@@ -856,7 +856,7 @@
           </dl>
         </article>
       </div>
-      <div class="win-foot"><a class="btn" href="pro.html">Read the Pro version</a><span class="pos"></span><button class="btn primary" type="button" data-garden>Back to the garden</button></div>`;
+      <div class="win-foot"><a class="btn" href="index.html">Read the Pro version</a><span class="pos"></span><button class="btn primary" type="button" data-garden>Back to the garden</button></div>`;
     openWindow(html);
     win.querySelector('[data-close]').addEventListener('click', closeWindow);
     win.querySelector('[data-garden]').addEventListener('click', closeWindow);
