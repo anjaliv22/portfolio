@@ -816,7 +816,6 @@
           <h3 class="sec">WHAT I BUILT</h3>
           <ul class="points">${p.points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
           ${chips(p.tools)}
-          ${p.link ? `<a class="btn primary" href="${esc(p.link)}" target="_blank" rel="noopener">See it on GitHub ↗</a>` : ''}
         </article>
       </div>
       <div class="win-foot">

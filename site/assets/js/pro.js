@@ -154,7 +154,6 @@
         <p class="tag">${esc(p.tagline)}</p>
         <ul>${p.points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
         ${shelf(p.tools, i, true)}
-        ${p.link ? `<a class="more" href="${esc(p.link)}" target="_blank" rel="noopener">See it on GitHub ↗</a>` : ''}
       </article>`).join('')}
     </div>`;
 
