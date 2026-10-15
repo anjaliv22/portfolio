@@ -392,17 +392,6 @@
     box: () => ({ x: pe.x - 38 * pe.s, y: pe.y - 56 * pe.s, w: 76 * pe.s, h: 66 * pe.s }),
     mask: () => ({ t: 'circle', cx: pe.x, cy: pe.y - 20 * pe.s, r: 26 * pe.s }),
   }));
-  dets.push({ key: 'person', kind: 'person', conf: 0.99, color: COLORS.person, label: () => 'person · Anjali · 0.99',
-    box: () => ({ x: GARDENER.x - 30, y: GARDENER.y - 206, w: 160, h: 212 }),
-    mask: () => ({ t: 'rect', x: GARDENER.x - 24, y: GARDENER.y - 202, w: 100, h: 204, rx: 30 }) });
-  dets.push({ key: 'library', kind: 'building', conf: 0.95, color: COLORS.building, label: () => 'building · library · 0.95',
-    box: () => ({ x: 488, y: 226, w: 144, h: 122 }), mask: () => ({ t: 'rect', x: 498, y: 236, w: 124, h: 110, rx: 4 }) });
-  hydDetections.forEach((h, i) => dets.push({ key: 'hyd-' + i, kind: 'bg', conf: [0.88, 0.84, 0.79, 0.86][i % 4], color: COLORS.bg,
-    label: () => `hydrangea ${fmt(0.88 - i * 0.03)}`, box: () => ({ x: h.x - 34 * h.s, y: h.y - 40 * h.s, w: 68 * h.s, h: 66 * h.s }) }));
-  butterflies.forEach((b, i) => dets.push({ key: 'fly-' + i, kind: 'bg', conf: [0.44, 0.41][i], color: COLORS.bg,
-    label: () => `butterfly ${[0.44, 0.41][i]}`, box: () => ({ x: b.x - 13 * b.s, y: b.y - 9 * b.s, w: 26 * b.s, h: 18 * b.s }) }));
-  DECOYS.forEach((d) => { const s = depth(d.y); dets.push({ key: 'decoy-' + d.id, kind: 'decoy', decoy: d, conf: d.conf, color: d.as === 'bunny' ? COLORS.bunny : COLORS.peony,
-    label: () => `${d.as} ${d.conf.toFixed(2)}?`, box: () => ({ x: d.x - 22 * s, y: d.y - 30 * s, w: 44 * s, h: 32 * s }) }); });
   function det(i) { return dets[i]; }
   const fmt = (v) => v.toFixed(2);
   dets.forEach((d) => { d.live = d.conf; });
@@ -447,6 +436,7 @@
   // ---------- inference state ----------
   const state = { running: false, t0: 0, threshold: 0.5, masks: true, hoverKey: null, focusKey: null, focusUntil: 0, frame: 1200, fps: 30, lastFrame: 0, latency: 21, stageShown: '' };
   const STAGE = { detect: 900, classify: 1500, segment: 2100 };
+  const controls = document.querySelector('.controls');
   const runBtn = L('runBtn'), runLabel = L('runLabel'), runIcon = L('runIcon'), stagesEl = L('stages');
   const live = L('live'), liveText = L('liveText'), scan = L('scan');
   const panelBody = L('panelBody'), objCount = L('objCount');
@@ -462,20 +452,22 @@
     state.t0 = reduced() ? performance.now() - STAGE.segment - 10 : performance.now();
     state.stageShown = '';
     runBtn.classList.add('on');
-    runLabel.textContent = 'Stop inference';
+    runLabel.textContent = 'Stop model';
     runIcon.setAttribute('d', 'M5 5 H15 V15 H5 Z');
     live.classList.add('on');
+    controls.classList.add('running');
     renderPanelRunning();
   }
   function stopInference() {
     state.running = false;
     runBtn.classList.remove('on');
-    runLabel.textContent = 'Run model inference';
+    runLabel.textContent = 'Run model';
     runIcon.setAttribute('d', 'M6 4 L16 10 L6 16 Z');
     live.classList.remove('on');
     liveText.textContent = 'MODEL IDLE · CAM 01';
     stagesEl.querySelectorAll('li').forEach((li) => li.classList.remove('done', 'active'));
     scan.setAttribute('opacity', 0);
+    controls.classList.remove('running');
     renderPanelIdle();
   }
   runBtn.addEventListener('click', () => (state.running ? stopInference() : startInference()));
@@ -488,7 +480,7 @@
     const m = svg.getScreenCTM();
     if (!m) return;
     const panelEl = document.getElementById('panel');
-    const covered = window.innerWidth > 900 ? panelEl.getBoundingClientRect().left : window.innerWidth;
+    const covered = window.innerWidth > 900 && panelEl.classList.contains('open') ? panelEl.getBoundingClientRect().left : window.innerWidth;
     sceneRight = new DOMPoint(covered - 8, 0).matrixTransform(m.inverse()).x;
   }
   window.addEventListener('resize', measureScene);
@@ -542,48 +534,34 @@
 
   // ---------- results panel ----------
   const ICON_SW = (c, round) => `<span class="sw" style="background:${c};${round ? 'border-radius:50%;' : ''}"></span>`;
-  function renderPanelIdle() {
-    objCount.textContent = 'idle';
-    panelBody.innerHTML = `<div class="idle">
-      <p>The model is idle. Press <b>Run model inference</b> to see what is growing in this garden.</p>
-      <button class="run" type="button" data-run><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z"></path></svg><span>Run model inference</span></button>
-      <p class="small">Or just click anything in the garden. Prefer a plain page? <a href="index.html">Switch to Pro mode</a>.</p>
-    </div>`;
-    updateSummary();
-  }
+  const panel = L('panel');
+  const MONTHS = { January: 'Jan', February: 'Feb', March: 'Mar', April: 'Apr', May: 'May', June: 'Jun', July: 'Jul', August: 'Aug', September: 'Sep', October: 'Oct', November: 'Nov', December: 'Dec' };
+  const shortDates = (s) => s.replace(/\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/g, (m) => MONTHS[m]);
+  function openPanel() { panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); measureScene(); }
+  function closePanel() { panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); measureScene(); }
+  function renderPanelIdle() { closePanel(); }
   function renderPanelRunning() {
-    const t = performance.now() - state.t0;
-    if (t < STAGE.segment) {
-      objCount.textContent = 'running…';
-      panelBody.innerHTML = '<div class="idle"><p>Scanning the garden…</p><p class="small">detect → classify → segment</p></div>';
-      return;
-    }
-    const shown = dets.filter((d) => visible(d) && d.kind !== 'bg');
-    objCount.textContent = `${dets.filter(visible).length} objects`;
-    const rows = [];
-    const bunnyRows = bunnies.map((b, i) => ({ d: dets[i], b })).filter((r) => visible(r.d));
-    if (bunnyRows.length) {
-      rows.push(`<h3 class="group-title">WORK · BUNNY × ${bunnyRows.length}</h3>`);
-      bunnyRows.forEach(({ d, b }) => rows.push(`<button class="row" type="button" data-open="bunny" data-i="${b.i}" data-key="${d.key}" style="animation-delay:${rows.length * 40}ms">${ICON_SW(COLORS.bunny)}<span class="cf">${fmt(d.conf)}</span><span class="nm">${b.exp.org.startsWith('Martinrea') ? 'Martinrea · ' + (b.exp.id === 'martinrea1' ? 'Vision App' : 'Vision Eng') : esc(b.exp.org)}</span><span class="yr">${esc(b.exp.year)}</span></button>`));
-    }
-    const peonyRows = peonies.map((pe, i) => ({ d: dets[bunnies.length + i], pe })).filter((r) => visible(r.d));
-    if (peonyRows.length) {
-      rows.push(`<h3 class="group-title">PROJECTS · PEONY × ${peonyRows.length}</h3>`);
-      peonyRows.forEach(({ d, pe }) => rows.push(`<button class="row" type="button" data-open="peony" data-i="${pe.i}" data-key="${d.key}" style="animation-delay:${rows.length * 40}ms">${ICON_SW(PEONY_DOT[pe.p.color] || COLORS.peony, true)}<span class="cf">${fmt(d.conf)}</span><span class="nm">${esc(pe.p.name)}</span><span class="yr">${pe.p.kind === 'Hardware' ? 'HW' : 'SW'}</span></button>`));
-    }
-    rows.push('<h3 class="group-title">ALSO SPOTTED</h3>');
-    rows.push(`<button class="row" type="button" data-open="person" data-key="person">${ICON_SW(COLORS.person)}<span class="cf">0.99</span><span class="nm">person · <b>Anjali</b>, say hi</span><span class="yr"></span></button>`);
-    rows.push(`<button class="row" type="button" data-open="library" data-key="library">${ICON_SW(COLORS.building)}<span class="cf">0.95</span><span class="nm">building · <b>the library</b></span><span class="yr"></span></button>`);
-    const decoys = dets.filter((d) => d.kind === 'decoy' && visible(d));
-    if (decoys.length) {
-      rows.push('<h3 class="group-title">LOW CONFIDENCE</h3>');
-      decoys.forEach((d) => rows.push(`<div class="row" style="cursor:default">${ICON_SW(d.color)}<span class="cf">${fmt(d.conf)}</span><span class="nm">"${d.decoy.as}" (it's ${d.decoy.note})</span><span class="yr"></span></div>`));
-    }
-    panelBody.innerHTML = rows.join('');
-    if (!shown.length) panelBody.innerHTML = '<div class="idle"><p>Nothing clears this confidence threshold. Try lowering it in Model settings.</p></div>';
+    if (performance.now() - state.t0 < STAGE.segment) return; // the panel slides out once the pass finishes
+    objCount.textContent = `${bunnies.length + peonies.length} detections`;
+    const timeline = [...bunnies].reverse().map((b, n) => {
+      const d = dets[b.i], e = b.exp;
+      return `<li><button class="tl-item" type="button" data-open="bunny" data-i="${b.i}" data-key="${d.key}" style="animation-delay:${n * 60}ms">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <span class="tl-date">${esc(shortDates(e.dates))}</span>
+        <span class="tl-role">${esc(e.role)}</span>
+        <span class="tl-org">${esc(e.org)} <span class="cf">· bunny ${fmt(d.conf)}</span></span>
+      </button></li>`;
+    }).join('');
+    const projects = peonies.map((pe, n) => {
+      const d = dets[bunnies.length + pe.i];
+      return `<button class="row" type="button" data-open="peony" data-i="${pe.i}" data-key="${d.key}" style="animation-delay:${(bunnies.length + n) * 60}ms">${ICON_SW(PEONY_DOT[pe.p.color] || COLORS.peony, true)}<span class="cf">${fmt(d.conf)}</span><span class="nm">${esc(pe.p.name)}</span><span class="yr">${pe.p.kind === 'Hardware' ? 'HW' : 'SW'}</span></button>`;
+    }).join('');
+    panelBody.innerHTML = `<h3 class="group-title">WORK EXPERIENCE · BUNNY × ${bunnies.length}</h3><ol class="timeline">${timeline}</ol>
+      <h3 class="group-title">PROJECTS · PEONY × ${peonies.length}</h3>${projects}`;
+    openPanel();
   }
+  L('panelClose').addEventListener('click', closePanel);
   panelBody.addEventListener('click', (e) => {
-    if (e.target.closest('[data-run]')) return startInference();
     const row = e.target.closest('[data-open]');
     if (row) openFrom(row.dataset.open, +row.dataset.i);
   });
@@ -596,26 +574,8 @@
   function setHover(key) {
     state.hoverKey = key;
     bunnies.forEach((b) => { b.paused = key === 'bunny-' + b.exp.id; });
-    panelBody.querySelectorAll('.row').forEach((r) => r.classList.toggle('hl', r.dataset.key === key));
+    panelBody.querySelectorAll('.row, .tl-item').forEach((r) => r.classList.toggle('hl', r.dataset.key === key));
   }
-
-  // settings
-  const confIn = L('conf'), confOut = L('confOut'), masksIn = L('masks'), phIn = L('ph'), phOut = L('phOut');
-  function updateSummary() {
-    L('settingsSummary').textContent = `conf ≥ ${state.threshold.toFixed(2)} · masks ${state.masks ? 'on' : 'off'} · pH ${soilPH.toFixed(1)}`;
-  }
-  confIn.addEventListener('input', () => { state.threshold = +confIn.value; confOut.textContent = state.threshold.toFixed(2); updateSummary(); if (state.running) renderPanelRunning(); });
-  masksIn.addEventListener('change', () => { state.masks = masksIn.checked; updateSummary(); });
-  phIn.addEventListener('input', () => { soilPH = +phIn.value; phOut.textContent = soilPH.toFixed(1); paintHydrangeas(); updateSummary(); });
-
-  // mobile panel toggle
-  const panel = L('panel'), panelToggle = L('panelToggle');
-  panelToggle.addEventListener('click', () => {
-    const open = !panel.classList.contains('open');
-    panel.classList.toggle('open', open);
-    panelToggle.setAttribute('aria-expanded', String(open));
-    panelToggle.textContent = open ? 'Close results' : 'Model results';
-  });
 
   // ---------- hover card ----------
   const card = L('hovercard');
@@ -632,11 +592,11 @@
     if (h.kind === 'bunny') {
       const e = h.ref.exp;
       k = on ? `detection · bunny · conf ${fmt(d.conf)}` : 'something is hopping here…';
-      t = `${e.org} · ${e.year}`; desc = e.headline; go = 'Click to view model results →'; c = COLORS.bunny; cInk = 'var(--bunny-ink)';
+      t = `${e.org} · ${e.year}`; desc = e.headline; go = 'Click to see this experience →'; c = COLORS.bunny; cInk = 'var(--bunny-ink)';
     } else if (h.kind === 'peony') {
       const p = h.ref.p;
       k = on ? `detection · peony · conf ${fmt(d.conf)}` : `peony · ${p.kind.toLowerCase()} project`;
-      t = p.name; desc = p.tagline; go = 'Click to run inference →'; c = COLORS.peony; cInk = 'var(--peony-ink)';
+      t = p.name; desc = p.tagline; go = 'Click to see this project →'; c = COLORS.peony; cInk = 'var(--peony-ink)';
     } else if (h.kind === 'person') {
       k = on ? 'detection · person · conf 0.99' : 'the gardener';
       t = 'Anjali, that\'s me'; desc = 'Say hi and read my model card.'; go = 'Click to say hi →'; c = COLORS.person; cInk = 'var(--person-ink)';
@@ -650,25 +610,45 @@
     card.hidden = false;
     const cw = card.offsetWidth, ch = card.offsetHeight;
     let left = sb.right + 12, top = sb.top - 10;
-    if (left + cw > sb.sw - (window.innerWidth > 900 ? 360 : 12)) left = sb.left - cw - 12;
+    if (left + cw > sb.sw - (window.innerWidth > 900 && panel.classList.contains('open') ? 360 : 12)) left = sb.left - cw - 12;
     left = clamp(left, 12, sb.sw - cw - 12); top = clamp(top, 12, sb.sh - ch - 12);
     card.style.left = left + 'px'; card.style.top = top + 'px';
   }
   function hoverOff() { setHover(null); card.hidden = true; }
+
+  // ---------- intro bubble ----------
+  const intro = L('intro');
+  let introOpen = !intro.hidden;
+  function positionIntro() {
+    if (!introOpen) return;
+    const head = screenBox({ x: GARDENER.x - 12, y: GARDENER.y - 196, w: 36, h: 40 });
+    const w = intro.offsetWidth, h = intro.offsetHeight;
+    let left = head.right + 18, side = 'left';
+    if (left + w > head.sw - 12) { left = head.left - w - 18; side = 'right'; }
+    left = clamp(left, 12, head.sw - w - 12);
+    const top = clamp(head.top - 24, 12, head.sh - h - 12);
+    intro.style.left = left + 'px'; intro.style.top = top + 'px';
+    intro.dataset.tail = side;
+    intro.style.setProperty('--tail-y', clamp(head.top + 20 - top, 24, h - 24) + 'px');
+  }
+  function closeIntro() { introOpen = false; intro.hidden = true; }
+  L('introClose').addEventListener('click', closeIntro);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && introOpen && overlay.hidden) closeIntro(); });
+  window.addEventListener('resize', positionIntro);
 
   // ---------- activation ----------
   function flash(key, ms = 650) { state.focusKey = key; state.focusUntil = performance.now() + ms; }
   function activate(h) {
     if (performance.now() - dragEndedAt < 120) return;
     card.hidden = true;
-    if (h.kind === 'bunny') { flash(keyFor(h)); setTimeout(() => openExperience(h.ref.i), state.running || reduced() ? 0 : 450); }
-    else if (h.kind === 'peony') inspectPeony(h.ref.i);
-    else if (h.kind === 'person') { flash('person'); setTimeout(openAbout, state.running || reduced() ? 0 : 350); }
+    if (h.kind === 'bunny') openExperience(h.ref.i);
+    else if (h.kind === 'peony') openProject(h.ref.i);
+    else if (h.kind === 'person') openAbout();
     else openLibrary();
   }
   function openFrom(kind, i) {
     if (kind === 'bunny') openExperience(i);
-    else if (kind === 'peony') inspectPeony(i);
+    else if (kind === 'peony') openProject(i);
     else if (kind === 'person') openAbout();
     else openLibrary();
   }
@@ -692,7 +672,7 @@
     if (!drag) return;
     const dx = e.clientX - drag.x;
     if (Math.abs(dx) > 6) drag.moved = true;
-    if (drag.moved) { vb.x = clamp(drag.vx - dx * (vb.w / window.innerWidth), 0, W - vb.w); homeVB.x = vb.x; applyVB(); card.hidden = true; }
+    if (drag.moved) { vb.x = clamp(drag.vx - dx * (vb.w / window.innerWidth), 0, W - vb.w); homeVB.x = vb.x; applyVB(); card.hidden = true; positionIntro(); }
   });
   window.addEventListener('pointerup', () => { if (drag && drag.moved) dragEndedAt = performance.now(); drag = null; });
   function zoomTo(target, ms, done) {
@@ -718,6 +698,7 @@
   const overlay = L('overlay'), win = L('window');
   let lastFocus = null, onCloseCb = null;
   function openWindow(html, { onClose } = {}) {
+    if (introOpen) closeIntro();
     if (overlay.hidden) lastFocus = document.activeElement;
     onCloseCb = onClose || null;
     win.innerHTML = html;
@@ -816,6 +797,7 @@
           <h3 class="sec">WHAT I BUILT</h3>
           <ul class="points">${p.points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
           ${chips(p.tools)}
+          ${p.link ? `<a class="btn primary" href="${esc(p.link)}" target="_blank" rel="noopener">See it on GitHub ↗</a>` : ''}
         </article>
       </div>
       <div class="win-foot">
@@ -841,6 +823,7 @@
       ...Object.entries(P.skills).map(([k, v]) => [k, v.join(', ')]),
     ];
     if (P.funFact) rows.push(['Fun fact', P.funFact]);
+    if (P.funFacts && P.funFacts.length) rows.push(['Fun facts', P.funFacts.map((f) => f.title).join(' · ')]);
     const html = `${bar('MODEL_CARD.md')}
       <div class="win-body">
         <section class="det-col" aria-label="Detection"><div class="crop">${crop}</div>
@@ -914,5 +897,7 @@
   L('tagline').textContent = D.person.tagline;
   renderPanelIdle();
   computeHome();
+  requestAnimationFrame(positionIntro);
+  if (document.fonts) document.fonts.ready.then(positionIntro);
   requestAnimationFrame(tick);
 })();

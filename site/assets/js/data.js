@@ -16,8 +16,17 @@ window.PORTFOLIO = {
     github: 'https://github.com/anjaliv22',
     linkedin: 'https://www.linkedin.com/in/anjvatha',
     resumeUrl: '', // e.g. 'assets/Anjali-Resume.pdf' (leave out your phone number before uploading)
-    funFact: '',   // shown on the model card when filled in
-    specialties: ['Embedded firmware', 'Computer vision', 'Full-stack software'],
+    funFact: '',   // optional single line on the garden's model card
+    // Fun facts: cards in Pro mode, and a list on the garden's model card.
+    // icon options: dance | belt | abacus | yarn | book | star
+    funFacts: [
+      { icon: 'dance', title: 'Classical dancer and teacher', text: "I've been learning South Indian classical dance since I was three, and now I teach it too." },
+      { icon: 'belt', title: 'Black belt in taekwondo', text: 'I trained my way up to a black belt in taekwondo.' },
+      { icon: 'abacus', title: 'UCMAS baccalaureate', text: 'I completed UCMAS abacus mental math all the way to the baccalaureate level.' },
+      { icon: 'yarn', title: 'Always crocheting', text: "I love to crochet, and right now I'm on a binge of making all kinds of stuffed animals." },
+      { icon: 'book', title: 'Bookworm', text: 'I love to read. My unbeatable favourite is A Thousand Splendid Suns.' },
+    ],
+    specialties: ['Embedded systems', 'Computer vision', 'Machine learning', 'Full-stack software'],
     coursework: ['Embedded Microprocessor Systems', 'Digital Hardware Systems', 'Real-Time Operating Systems', 'Computer Networks', 'Systems Programming and Concurrency'],
     skills: {
       Languages: ['C', 'C++', 'Python', 'SystemVerilog', 'VHDL', 'RISC-V Assembly', 'Java', 'JavaScript', 'C#/.NET', 'MATLAB'],
