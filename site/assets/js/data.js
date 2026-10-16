@@ -15,7 +15,7 @@ window.PORTFOLIO = {
     email: 'avathana@uwaterloo.ca',
     github: 'https://github.com/anjaliv22',
     linkedin: 'https://www.linkedin.com/in/anjvatha',
-    resumeUrl: 'assets/Anjali-Vathanakumaran-Resume.pdf', // phone number removed from this copy
+    resumeUrl: 'assets/Anjali___W_27.pdf', // phone number removed from this copy
     funFact: '',   // optional single line on the garden's model card
     // Fun facts: cards in Pro mode, and a list on the garden's model card.
     // icon options: dance | belt | abacus | yarn | book | star
