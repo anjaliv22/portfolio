@@ -71,25 +71,37 @@ main { min-width: 0; padding: 0 clamp(20px, 4vw, 64px) 40px; outline: none; }
 .sec-lead { margin: 0 0 32px; color: var(--muted); font-size: 17px; max-width: 60ch; }
 
 /* hero / about */
-.hero { padding-top: 64px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(220px, .9fr); gap: 40px; align-items: center; min-height: min(92vh, 760px); }
-.hero > * { min-width: 0; }
-.hero h1 { margin: 0 0 18px; font-family: var(--display); font-weight: 500; font-size: clamp(44px, 6vw, 76px); line-height: 1.02; letter-spacing: -.02em; }
+.hero { padding-top: 72px; min-height: min(86vh, 700px); display: flex; align-items: center; }
+.hero-copy { max-width: 640px; }
+.hero h1 { margin: .75em 0 22px; font-family: var(--display); font-weight: 500; font-size: clamp(36px, 4.4vw, 54px); line-height: 1.05; letter-spacing: -.02em; }
 .hero h1 em { font-style: italic; color: var(--pink-deep); }
-.hero .lead { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; max-width: 34em; margin: 0 0 24px; }
+.hero .name { position: relative; display: inline-block; white-space: nowrap; padding-right: 1.2em; }
+.hero .lead { font-size: clamp(15.5px, 1.25vw, 17px); line-height: 1.65; max-width: 36em; margin: 0 0 14px; }
+.hero .lead + .actions { margin-top: 26px; }
+.worked { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.worked-title { display: inline-block; margin-bottom: 10px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.worked-title:hover { color: var(--pink-deep); }
+.worked ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 26px; }
+.worked li { font-family: var(--display); font-size: 17px; font-weight: 500; color: var(--ink); opacity: .8; }
+
+/* the little waving me */
+.girl { position: absolute; left: calc(100% - 1.32em); bottom: .04em; width: 1.3em; height: 1.95em; overflow: visible; pointer-events: none; }
+.girl-body { transform-origin: 52px 147px; transform-box: view-box; transform: rotate(-9deg); }
+.girl-wave { transform-origin: 66px 70px; transform-box: view-box; animation: wave 2.6s ease-in-out infinite; }
+.girl-eyes { transform-origin: 52px 39.5px; transform-box: view-box; animation: blink 5s infinite; }
+@keyframes wave { 0%, 55%, 100% { transform: rotate(0); } 62% { transform: rotate(-16deg); } 70% { transform: rotate(10deg); } 78% { transform: rotate(-14deg); } 86% { transform: rotate(8deg); } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
 .pill { font-size: 14px; font-weight: 600; padding: 6px 14px; border-radius: 999px; background: var(--green-soft); color: var(--green-deep); }
 .pill:nth-child(2) { background: var(--pink-soft); color: var(--pink-deep); }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 12px; border: 1px solid var(--rule); background: var(--surface); font: inherit; font-weight: 600; font-size: 15px; text-decoration: none; cursor: pointer; color: var(--ink); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 11px; border: 1px solid var(--rule); background: var(--surface); font: inherit; font-weight: 600; font-size: 14px; text-decoration: none; cursor: pointer; color: var(--ink); }
 .btn:hover { border-color: var(--pink); }
 .btn.primary { background: var(--ink); color: #FFFFFF; border-color: var(--ink); }
 .btn.primary:hover { background: #463E41; }
 .btn svg { width: 16px; height: 16px; fill: currentColor; }
-.fun-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; color: var(--muted); font-size: 15px; text-decoration: none; }
-.fun-link b { color: var(--green-deep); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--green); }
-.hero-art { width: 100%; max-width: 420px; justify-self: center; aspect-ratio: 1 / 1; }
-.hero-art svg { width: 100%; height: 100%; display: block; }
 .copy-note { font-size: 13px; color: var(--green-deep); min-height: 1.4em; margin: 8px 0 0; }
+.copy-note:empty { margin: 0; min-height: 0; }
 
 /* skills & education */
 .skills-grid { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 1.6fr); gap: 22px; align-items: start; }
@@ -146,14 +158,6 @@ main { min-width: 0; padding: 0 clamp(20px, 4vw, 64px) 40px; outline: none; }
 .proj .more { font-weight: 600; color: var(--green-deep); text-decoration: none; font-size: 15px; }
 .proj .more:hover { text-decoration: underline; }
 
-/* fun facts */
-.facts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-.fact { display: grid; gap: 10px; align-content: start; padding: 24px; }
-.fact-icon { width: 64px; height: 64px; border-radius: 18px; background: var(--pink-soft); display: grid; place-items: center; }
-.fact:nth-child(even) .fact-icon { background: var(--green-soft); }
-.fact-icon svg { width: 44px; height: 44px; }
-.fact h3 { margin: 4px 0 0; font-family: var(--display); font-weight: 550; font-size: 20px; line-height: 1.2; }
-.fact p { margin: 0; color: var(--ink); opacity: .85; font-size: 15.5px; }
 .kw { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 62%, var(--pink-soft) 62%); padding: 0 2px; }
 .kw.g { background: linear-gradient(transparent 62%, var(--green-soft) 62%); }
 
@@ -176,8 +180,7 @@ main { min-width: 0; padding: 0 clamp(20px, 4vw, 64px) 40px; outline: none; }
   .tabs { padding-right: 130px; }
   .mode { top: calc(env(safe-area-inset-top, 0px) + 9px); right: 12px; padding: 6px 10px; }
   .sec { padding-block: 48px 12px; scroll-margin-top: 64px; }
-  .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 32px; gap: 10px; }
-  .hero-art { max-width: 240px; order: -1; justify-self: start; }
+  .hero { min-height: 0; padding-top: 40px; }
   .skills-grid { grid-template-columns: 1fr; }
   .job { grid-template-columns: 1fr; gap: 24px; scroll-margin-top: 72px; }
   .job-head { flex-direction: column; }
