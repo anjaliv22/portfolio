@@ -163,6 +163,7 @@
         <h3>${esc(p.name)}</h3>
         <p class="tag">${esc(p.tagline)}</p>
         <ul>${p.points.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+        ${p.link ? `<a class="more" href="${esc(p.link)}" target="_blank" rel="noopener">See it on GitHub ↗</a>` : ''}
         ${shelf(p.tools, i, true)}
       </article>`).join('')}
     </div>`;
